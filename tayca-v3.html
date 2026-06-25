@@ -71,13 +71,16 @@ main{padding:14px;}
 .view.active{display:block;}
 
 /* LESSON LIST */
-.lesson-card{background:white;padding:12px 14px;margin-bottom:8px;border-radius:10px;border-left:4px solid #0d9488;cursor:pointer;display:flex;align-items:center;gap:12px;transition:.15s;}
-.lesson-card:hover{box-shadow:0 3px 10px rgba(0,0,0,.1);transform:translateX(3px);}
-.lesson-card.empty{border-left-color:#ddd;opacity:.65;cursor:default;}
+.lesson-card{background:white;padding:14px 16px;margin-bottom:10px;border-radius:14px;border:1.5px solid #e8f2f1;border-left:4px solid #0d9488;cursor:pointer;display:flex;align-items:center;gap:14px;transition:.15s;box-shadow:0 1px 4px rgba(13,148,136,.06);}
+.lesson-card:hover{box-shadow:0 4px 14px rgba(13,148,136,.12);transform:translateY(-1px);}
+.lesson-card.empty{border-left-color:#ddd;opacity:.65;cursor:default;box-shadow:none;}
+.lthumb{width:50px;height:50px;border-radius:14px;background:linear-gradient(145deg,#e0f2f1,#f0fdf9);border:1px solid #b2dfdb;display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;line-height:1;}
 .lnum{font-size:20px;font-weight:800;color:#0d9488;min-width:28px;}
 .lesson-card.empty .lnum{color:#bbb;}
-.linfo{flex:1;}
-.ltitle{font-weight:700;font-size:13px;}
+.linfo{flex:1;min-width:0;}
+.lnum-badge{display:inline-block;font-size:10px;font-weight:800;color:#0d9488;background:#e0f2f1;padding:2px 9px;border-radius:20px;letter-spacing:.04em;text-transform:uppercase;}
+.ltitle{font-weight:800;font-size:15px;color:#134e4a;line-height:1.25;margin-top:5px;}
+.lsubtitle{font-size:11px;color:#5f7a78;font-weight:500;margin-top:3px;line-height:1.35;}
 .lsub{font-size:11px;color:#999;margin-top:2px;}
 .lmeta{display:flex;gap:8px;margin-top:4px;flex-wrap:wrap;}
 .lbadge{font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;white-space:nowrap;}
@@ -90,9 +93,21 @@ main{padding:14px;}
 .ltimer-wrap{display:flex;align-items:center;gap:6px;font-size:11px;color:rgba(255,255,255,.75);margin-left:auto;}
 .ltimer-icon{font-size:13px;}
 #lesson-live-timer{font-family:'Courier New',monospace;font-weight:700;font-size:12px;color:white;}
-.larrow{color:#ccc;font-size:18px;}
+.larrow-wrap{width:34px;height:34px;border-radius:50%;background:#f0fdf9;border:1.5px solid #b2dfdb;display:flex;align-items:center;justify-content:center;color:#0d9488;font-size:18px;font-weight:700;flex-shrink:0;transition:.15s;}
+.lesson-card:hover .larrow-wrap{background:#0d9488;color:white;border-color:#0d9488;}
 
 /* LESSON DETAIL */
+.lesson-back-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin-bottom:12px;padding:10px 16px;background:#f0fdf9;border:1.5px solid #99d5cf;border-radius:12px;color:#0d6b63;font-weight:800;font-size:14px;cursor:pointer;transition:.15s;}
+.lesson-back-btn:hover{background:#e0f2f1;border-color:#0d9488;}
+.lesson-back-btn:active{transform:scale(.98);}
+.lesson-back-icon{font-size:20px;line-height:1;font-weight:900;}
+.lesson-hero{display:flex;align-items:center;gap:14px;background:linear-gradient(135deg,#f0fdf9 0%,#fff 55%);border:1.5px solid #b2dfdb;border-radius:16px;padding:14px 16px;margin-bottom:14px;box-shadow:0 2px 10px rgba(13,148,136,.08);}
+.lesson-hero-emoji{font-size:34px;width:58px;height:58px;display:flex;align-items:center;justify-content:center;background:white;border-radius:14px;box-shadow:0 2px 8px rgba(13,148,136,.1);flex-shrink:0;line-height:1;}
+.lesson-hero-text{flex:1;min-width:0;}
+.lesson-hero-label{font-size:10px;font-weight:800;color:#0d9488;text-transform:uppercase;letter-spacing:.07em;}
+.lesson-hero-title{font-size:18px;font-weight:800;color:#134e4a;margin:3px 0 2px;line-height:1.25;}
+.lesson-hero-sub{font-size:12px;color:#5f7a78;font-weight:500;line-height:1.35;}
+.lesson-hero-meta{display:flex;align-items:center;gap:8px;margin-top:6px;flex-wrap:wrap;}
 .back-btn{display:flex;align-items:center;gap:6px;margin-bottom:14px;cursor:pointer;color:#0d9488;font-weight:700;font-size:13px;border:none;background:none;padding:0;}
 
 /* LESSON TABS */
@@ -299,6 +314,8 @@ h2{font-size:15px;color:#0d9488;margin:4px 0 12px;font-weight:700;}
 .bonus-sub{font-size:11px;color:#888;margin-top:2px;}
 .bonus-toggle{font-size:18px;color:#0d9488;font-weight:700;}
 .bonus-lesson{margin-left:14px;border-left:3px solid #b2dfdb;}
+.ex-texts[data-word-idx]{cursor:pointer;border-radius:8px;transition:background .15s;}
+.ex-texts[data-word-idx]:hover{background:#f0fdf9;}
 .ex-gram-btn{display:inline-block;margin-top:6px;padding:4px 10px;background:#f0fdf9;border:1px solid #b2dfdb;border-radius:6px;font-size:11px;font-weight:700;color:#0d9488;cursor:pointer;}
 
 /* ===== DARK MODE ===== */
@@ -309,12 +326,23 @@ h2{font-size:15px;color:#0d9488;margin:4px 0 12px;font-weight:700;}
   .nbtn.active{background:#0d9488;color:white;}
 
   /* Lesson list */
-  .lesson-card{background:#1e1e1e;}
+  .lesson-card{background:#1e1e1e;border-color:#2a2a2a;}
   .lesson-card.done{background:#0e2420;}
   .lesson-card.empty{background:#181818;}
-  .ltitle{color:#e0e0e0;}
+  .lthumb{background:linear-gradient(145deg,#0f2420,#1a3330);border-color:#1a5040;}
+  .ltitle{color:#e0f2f1;}
+  .lsubtitle{color:#7aa8a4;}
+  .lnum-badge{background:#0f2420;color:#4db6ac;}
+  .larrow-wrap{background:#0f2420;border-color:#1a5040;color:#4db6ac;}
+  .lesson-card:hover .larrow-wrap{background:#0d9488;color:white;}
+  .lesson-back-btn{background:#0f2420;border-color:#1a5040;color:#4db6ac;}
+  .lesson-back-btn:hover{background:#143530;border-color:#0d9488;}
+  .lesson-hero{background:linear-gradient(135deg,#0f2420 0%,#1e1e1e 55%);border-color:#1a5040;}
+  .lesson-hero-emoji{background:#1e1e1e;}
+  .lesson-hero-title{color:#e0f2f1;}
+  .lesson-hero-sub{color:#7aa8a4;}
+  #lesson-score-live{background:#0f2420;color:#4db6ac;}
   .lsub{color:#777;}
-  .larrow{color:#444;}
   .lbadge-visit{background:#0e2a18;color:#4caf50;}
   .lbadge-score{background:#0e1e35;color:#64b5f6;}
   .lbadge-time{background:#2a1a08;color:#ffb74d;}
@@ -328,63 +356,72 @@ h2{font-size:15px;color:#0d9488;margin:4px 0 12px;font-weight:700;}
 
   /* Word cards */
   .word-card{background:#1e1e1e;border-color:#2a2a2a;}
-  .word-thai{color:#444;}
-  .word-ro{color:#e0e0e0;}
-  .word-tr{color:#aaa;}
-  .word-note{background:#252525;color:#aaa;}
-  .word-note .ctx{color:#555;}
-  .ex-th{color:#444;}
-  .ex-ro{color:#e0e0e0;}
-  .ex-tr{color:#aaa;}
+  .word-thai{color:#f0f0f0;}
+  .word-ro{color:#d0d0d0;}
+  .word-tr{color:#b8b8b8;}
+  .word-note{background:#252525;color:#c0c0c0;}
+  .word-note .ctx{color:#888;}
+  .ex-th{color:#f0f0f0;}
+  .ex-ro{color:#d0d0d0;}
+  .ex-tr{color:#b8b8b8;}
   .ex-item{border-bottom-color:#252525;}
-  .sm-abtn{background:#252525;border-color:#333;color:#0d9488;}
+  .ex-texts[data-word-idx]:hover{background:#0f2420;}
+  .sm-abtn{background:#252525;border-color:#333;color:#4db6ac;}
 
   /* Speaking */
   .speak-card{background:#1e1e1e;border-color:#2a2a2a;}
-  .speak-thai{color:#444;}
-  .speak-ro{color:#e0e0e0;}
-  .speak-tr{color:#aaa;}
+  .speak-task{color:#4db6ac;}
+  .speak-thai{color:#f0f0f0;}
+  .speak-ro{color:#d0d0d0;}
+  .speak-tr{color:#b8b8b8;}
 
   /* Dialogue */
   .dialog-card{background:#1e1e1e;border-color:#2a2a2a;}
-  .dbubble-th{color:#444;}
-  .dbubble-ro{color:#e0e0e0;}
-  .dbubble-tr{color:#aaa;}
-  .dline.ali .dbubble{background:#0d1a35;}
-  .dline.nada .dbubble{background:#2a1020;}
+  .dialog-title{color:#4db6ac;}
+  .dbubble-th{color:#f0f0f0;}
+  .dbubble-ro{color:#d0d0d0;}
+  .dbubble-tr{color:#b8c8d8;}
+  .dline.ali .dbubble{background:#152a4a;border:1px solid #1e3a5f;}
+  .dline.nada .dbubble{background:#3a1a2e;border:1px solid #5a2a45;}
   .dline.active-line{background:#25200a;border-left-color:#f59e0b;}
 
   /* Tones */
   .tone-card{background:#1e1e1e;}
-  .tone-symbol{color:#555;}
-  .tone-desc{color:#aaa;}
+  .tone-symbol{color:#888;}
+  .tone-desc{color:#b8b8b8;}
   .tone-word{background:#252525;border-color:#333;}
-  .tw-th{color:#444;}
-  .tw-ro{color:#e0e0e0;}
-  .tw-tr{color:#aaa;}
+  .tw-th{color:#f0f0f0;}
+  .tw-ro{color:#d0d0d0;}
+  .tw-tr{color:#b8b8b8;}
 
   /* Grammar */
   .gram-card{background:#1e1e1e;}
-  .gram-formula{background:#1c1528;border-color:#3b2d6a;color:#e0e0e0;}
-  .gram-explain{color:#aaa;}
+  .gram-title{color:#c4b5fd;}
+  .gram-formula{background:#1c1528;border-color:#3b2d6a;color:#e8e0ff;}
+  .gram-explain{color:#c0c0c0;}
   .gram-examples .ex-item{border-bottom-color:#252525;}
-  .gram-piece{background:#252525;border-color:#444;}
-  .gram-piece-ro{color:#b39ddb;}
-  .gram-piece-tr{color:#aaa;}
-  .gram-piece-role{color:#666;}
+  .gram-piece{background:#2a2a2a;border-color:#444;}
+  .gram-piece-ro{color:#d8b4fe;}
+  .gram-piece-tr{color:#c8c8c8;}
+  .gram-piece-role{color:#a0a0a0;}
   .gram-piece.S{background:#0a1828;border-color:#3b82f6;}
-  .gram-piece.S .gram-piece-role{color:#3b82f6;}
+  .gram-piece.S .gram-piece-ro{color:#93c5fd;}
+  .gram-piece.S .gram-piece-role{color:#60a5fa;}
   .gram-piece.V{background:#0a2018;border-color:#10b981;}
-  .gram-piece.V .gram-piece-role{color:#10b981;}
+  .gram-piece.V .gram-piece-ro{color:#6ee7b7;}
+  .gram-piece.V .gram-piece-role{color:#34d399;}
   .gram-piece.O{background:#251a05;border-color:#f59e0b;}
-  .gram-piece.O .gram-piece-role{color:#f59e0b;}
+  .gram-piece.O .gram-piece-ro{color:#fcd34d;}
+  .gram-piece.O .gram-piece-role{color:#fbbf24;}
   .gram-piece.K{background:#08201e;border-color:#0d9488;}
-  .gram-piece.K .gram-piece-role{color:#0d9488;}
+  .gram-piece.K .gram-piece-ro{color:#5eead4;}
+  .gram-piece.K .gram-piece-role{color:#2dd4bf;}
   .gram-piece.Q,.gram-piece.N{background:#250a0a;border-color:#ef4444;}
-  .gram-piece.Q .gram-piece-role,.gram-piece.N .gram-piece-role{color:#ef4444;}
+  .gram-piece.Q .gram-piece-ro,.gram-piece.N .gram-piece-ro{color:#fca5a5;}
+  .gram-piece.Q .gram-piece-role,.gram-piece.N .gram-piece-role{color:#f87171;}
   .gram-modal{background:#1e1e1e;}
-  .gram-modal-sentence{color:#444;}
-  .gram-modal-tr{color:#aaa;}
+  .gram-modal-sentence{color:#f0f0f0;}
+  .gram-modal-tr{color:#b8b8b8;}
 
   /* Quiz / Listen */
   .listen-card{background:#1e1e1e;}
@@ -528,24 +565,29 @@ h2{font-size:15px;color:#0d9488;margin:4px 0 12px;font-weight:700;}
 .ex-finish-stat-val{font-size:28px;font-weight:700;color:#1cb0f6;}
 .ex-finish-stat-lbl{font-size:12px;color:#afafaf;}
 .ex-finish-btn{background:#58cc02;color:white;border:none;border-radius:14px;padding:16px 32px;font-size:16px;font-weight:700;cursor:pointer;box-shadow:0 4px 0 #46a302;}
-/* Quick action buttons on lesson cards */
-.lcard-actions{display:flex;flex-wrap:nowrap;gap:5px;margin-top:7px;}
-.lca-btn{border-radius:8px;padding:4px 7px;font-size:10px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:2px;transition:.15s;border:1.5px solid;white-space:nowrap;flex:1;justify-content:center;}
-.lca-btn.ex {background:#fff9db;border-color:#ffcc00;color:#b45309;}
-.lca-btn.sp {background:#e8f5e9;border-color:#66bb6a;color:#2e7d32;}
-.lca-btn.qz {background:#e3f2fd;border-color:#42a5f5;color:#1565c0;}
-.lca-btn.st {background:#fce4ec;border-color:#f48fb1;color:#880e4f;}
-.lca-btn:active{opacity:.7;transform:scale(.96);}
+/* Lesson detail header */
+.lesson-topbar{display:flex;align-items:center;justify-content:flex-end;margin-bottom:0;gap:8px;}
+.lesson-topbar-right{display:flex;align-items:center;gap:8px;}
+.lesson-header-star{background:#fff;border:1.5px solid #f48fb1;border-radius:10px;padding:7px 11px;font-size:15px;cursor:pointer;color:#880e4f;font-weight:700;line-height:1;flex-shrink:0;}
+.lesson-header-star:active{opacity:.75;transform:scale(.96);}
+#lesson-score-live{font-size:11px;font-weight:700;padding:3px 8px;border-radius:20px;background:#e0f2f1;color:#0d9488;}
+.practice-intro-card{background:white;border:1.5px solid #ffe082;border-radius:12px;padding:24px 20px;text-align:center;max-width:360px;margin:20px auto;}
+.practice-intro-icon{font-size:40px;margin-bottom:10px;}
+.practice-intro-title{font-size:16px;font-weight:800;color:#b45309;margin-bottom:8px;}
+.practice-intro-body{font-size:13px;color:#666;line-height:1.6;margin-bottom:18px;}
+.practice-start-btn{background:#ffcc00;border:none;border-radius:10px;padding:12px 28px;color:#7c4a00;font-size:14px;font-weight:800;cursor:pointer;box-shadow:0 3px 0 #e6b800;}
+.practice-start-btn:active{transform:translateY(2px);box-shadow:0 1px 0 #e6b800;}
 /* Lesson star rating */
 .lcard-stars{display:flex;gap:2px;margin-top:5px;font-size:13px;line-height:1;}
 .lcard-stars .s{color:#e0e0e0;}
 .lcard-stars .s.on{color:#fbbf24;}
 @media(prefers-color-scheme:dark){
-  .lca-btn.ex{background:#2a2200;border-color:#b8860b;color:#ffd54f;}
-  .lca-btn.sp{background:#0a2010;border-color:#388e3c;color:#a5d6a7;}
-  .lca-btn.qz{background:#0a1828;border-color:#1565c0;color:#90caf9;}
-  .lca-btn.st{background:#2a0a18;border-color:#880e4f;color:#f48fb1;}
-  .lcard-stars .s{color:#333;}
+  .lesson-header-star{background:#2a0a18;border-color:#880e4f;color:#f48fb1;}
+  .practice-intro-card{background:#1e1e1e;border-color:#b8860b;}
+  .practice-intro-title{color:#ffd54f;}
+  .practice-intro-body{color:#aaa;}
+  .practice-start-btn{background:#b8860b;color:#fff;box-shadow:0 3px 0 #8b6914;}
+  .lcard-stars .s{color:#e0e0e0;}
   .lcard-stars .s.on{color:#fbbf24;}
 }
 /* Dark mode overrides */
@@ -566,6 +608,7 @@ h2{font-size:15px;color:#0d9488;margin:4px 0 12px;font-weight:700;}
   .ex-answer-area{border-bottom-color:#333;}
   .ex-close-btn{color:#555;}
   .ex-listen-big-btn{background:#0d2233;box-shadow:0 4px 0 #0a1a2a;}
+  .ex-fb-answer{color:#c0c0c0;}
 }
 @keyframes popIn{0%{transform:scale(.5);opacity:0}80%{transform:scale(1.1)}100%{transform:scale(1);opacity:1}}
 </style>
@@ -577,7 +620,7 @@ if('serviceWorker' in navigator){
   });
 }
 // Versiyon kontrolü — yeni versiyon varsa cache temizle
-const APP_VERSION = 'v3.55';
+const APP_VERSION = 'v3.56';
 const storedVersion = localStorage.getItem('app_version');
 if(storedVersion && storedVersion !== APP_VERSION){
   // Yeni versiyon → caches temizle
@@ -601,9 +644,10 @@ const UI = {
     // Sekmeler
     tab_words:'Sözcükler', tab_tones:'Tonlar', tab_grammar:'Gramer',
     tab_speaking:'Konuşma', tab_dialogue:'Diyalog', tab_listening:'Dinleme',
-    tab_quiz:'Quiz', tab_numbers:'Sayılar', tab_calc:'Hesapla',
-    // Ders içi
-    lesson_back:'← Dersler', lesson_done_msg:'Bu dersi tamamladın!',
+    tab_quiz:'Quiz', tab_practice:'Alıştırma', tab_numbers:'Sayılar', tab_calc:'Hesapla',
+    practice_intro:'Kelime ve cümle alıştırmaları. Kısa egzersiz modu.',
+    practice_start:'Alıştırmaya Başla',
+    lesson_back:'← Dersler', lesson_back_list:'Ders Listesine Dön', lesson_done_msg:'Bu dersi tamamladın!',
     lesson_redo_hint:'İstersen tekrar işaretleyebilirsin',
     lesson_unmark:'↺ Tamamlanmadı olarak işaretle',
     lesson_mark_done:'✅ Dersi Tamamladım',
@@ -720,9 +764,10 @@ const UI = {
     // Tabs
     tab_words:'Words', tab_tones:'Tones', tab_grammar:'Grammar',
     tab_speaking:'Speaking', tab_dialogue:'Dialogue', tab_listening:'Listening',
-    tab_quiz:'Quiz', tab_numbers:'Numbers', tab_calc:'Calculator',
-    // Lesson
-    lesson_back:'← Lessons', lesson_done_msg:'You completed this lesson!',
+    tab_quiz:'Quiz', tab_practice:'Practice', tab_numbers:'Numbers', tab_calc:'Calculator',
+    practice_intro:'Word and sentence drills in a quick exercise mode.',
+    practice_start:'Start Practice',
+    lesson_back:'← Lessons', lesson_back_list:'Back to Lesson List', lesson_done_msg:'You completed this lesson!',
     lesson_redo_hint:'You can reset this if needed',
     lesson_unmark:'↺ Mark as Incomplete',
     lesson_mark_done:'✅ Mark as Complete',
@@ -842,6 +887,15 @@ function Lf(item, field){
   return item[field] || '';
 }
 
+function lessonSubtitle(meta){
+  if(!meta) return '';
+  return appLang==='en' ? (meta.title||'') : (meta.title_en||'');
+}
+
+function lessonNumLabel(num){
+  return (appLang==='en'?'Lesson ':'Ders ') + num;
+}
+
 function setLang(lang){
   appLang = lang;
   localStorage.setItem('tv3_lang', lang);
@@ -876,7 +930,7 @@ function setLang(lang){
     <span class="ltimer-icon">⏱️</span>
     <span id="lesson-live-timer">00:00</span>
   </div>
-  <span class="vbadge" id="app-version">v3.55</span>
+  <span class="vbadge" id="app-version">v3.56</span>
   <button class="hbtn" onclick="openModal('help-overlay')">❓</button>
   <button class="hbtn" onclick="openModal('settings-overlay')">⚙️</button>
 </header>
@@ -1343,7 +1397,6 @@ function renderLessonCard(L){
   const scoreColor = scorePct===null?'#999': scorePct>=70?'#1565c0': scorePct>=40?'#e65100':'#c62828';
   const timeStr = st.totalSec>0 ? fmtTime(st.totalSec) : null;
   const isDone = isCompleted(L.num);
-  const hasSpeaking = L.num < 20;
   const badges = [];
   if(isDone) badges.push('<span class="lbadge lbadge-done">🎉 '+s('lesson_done_msg')+'</span>');
   else if(allVisited) badges.push('<span class="lbadge" style="background:#e3f2fd;color:#1565c0;">'+s('lesson_all_done_q')+'</span>');
@@ -1353,19 +1406,15 @@ function renderLessonCard(L){
 
   return `
     <div class="lesson-card ${isDone?'done':''}" data-num="${L.num}" onclick="openLesson(${L.num})">
-      <div class="lnum">${L.num}</div>
+      <div class="lthumb" aria-hidden="true">${L.emoji}</div>
       <div class="linfo">
-        <div class="ltitle">${L.emoji} ${Lf(L,'title')}</div>
-        ${badges.length ? '<div class="lmeta">'+badges.join('')+'</div>' : '<div class="lsub">✓</div>'}
+        <span class="lnum-badge">${lessonNumLabel(L.num)}</span>
+        <div class="ltitle">${Lf(L,'title')}</div>
+        ${lessonSubtitle(L) ? `<div class="lsubtitle">${lessonSubtitle(L)}</div>` : ''}
+        ${badges.length ? '<div class="lmeta">'+badges.join('')+'</div>' : ''}
         ${renderLessonStars(L.num)}
-        <div class="lcard-actions" onclick="event.stopPropagation()">
-          <button class="lca-btn ex" onclick="startExercise(${L.num},event)">🎯 ${appLang==='en'?'Practice':'Alıştırma'}</button>
-          ${hasSpeaking ? `<button class="lca-btn sp" onclick="openLessonAt(${L.num},'speaking',event)">🗣️ ${appLang==='en'?'Speaking':'Konuşma'}</button>` : ''}
-          <button class="lca-btn qz" onclick="openLessonAt(${L.num},'quiz',event)">📝 ${appLang==='en'?'Quiz':'Sınav'}</button>
-          <button class="lca-btn st" onclick="showLessonStars(${L.num},event)">⭐ ${appLang==='en'?'Starred':'Yıldızlılar'}</button>
-        </div>
       </div>
-      <div class="larrow">›</div>
+      <div class="larrow-wrap" aria-hidden="true">›</div>
     </div>`;
 }
 
@@ -1396,20 +1445,23 @@ function renderLessonList(){
 }
 
 // =================== DERS DETAY ===================
-// hasTones'a göre dinamik sekme listesi
+function insertPracticeTab(tabs){
+  if(tabs.includes('practice')) return tabs;
+  return [...tabs, 'practice'];
+}
+
 function getTabsForLesson(meta){
-  // CORE 2000 dersleri (20+): sadece kelimeler ve quiz
-  if(meta.num>=20) return ['words','quiz'];
-  const base = ['words','grammar','speaking','dialogue','listening','quiz'];
-  if(meta.hasTones) return ['words','tones','grammar','speaking','dialogue','listening','quiz'];
-  if(meta.num===2) return ['numbers','calc','words','grammar','speaking','dialogue','listening','quiz'];
-  return base;
+  if(meta.num>=20) return insertPracticeTab(['words']);
+  const base = ['words','grammar','speaking','dialogue','listening'];
+  if(meta.hasTones) return insertPracticeTab(['words','tones','grammar','speaking','dialogue','listening']);
+  if(meta.num===2) return insertPracticeTab(['numbers','calc','words','grammar','speaking','dialogue','listening']);
+  return insertPracticeTab(base);
 }
 function getTabLabels(){
   return {
-    words:'📚 '+s('tab_words'), tones:'🎵 '+s('tab_tones'), grammar:'📖 '+s('tab_grammar'),
-    speaking:'🗣️ '+s('tab_speaking'), dialogue:'👥 '+s('tab_dialogue'), listening:'🎧 '+s('tab_listening'),
-    quiz:'📝 '+s('tab_quiz'), numbers:'🔢 '+s('tab_numbers'), calc:'🧮 '+s('tab_calc')
+    words:s('tab_words'), tones:s('tab_tones'), grammar:s('tab_grammar'),
+    speaking:s('tab_speaking'), dialogue:s('tab_dialogue'), listening:s('tab_listening'),
+    practice:s('tab_practice'), numbers:s('tab_numbers'), calc:s('tab_calc')
   };
 }
 
@@ -1747,22 +1799,13 @@ function buildLessonHTML(L, meta){
         </div>`}
     </div>`;
 
-  let quizSrc = L.quiz||[];
-  if(quizSrc.length===0 && meta.num>=20){
-    const wds = (L.words||[]).filter(w=>w.ro&&w.tr);
-    const pick = wds.length>15 ? wds.filter((_,i)=>i%Math.floor(wds.length/15)===0).slice(0,15) : wds;
-    quizSrc = pick.map(w=>{
-      const wrong = wds.filter(x=>x.id!==w.id).sort(()=>Math.random()-0.5).slice(0,3).map(x=>x.tr);
-      const opts = [w.tr,...wrong].sort(()=>Math.random()-0.5);
-      return {q:`"${w.ro}" ${s('quiz_q_suffix')}`, opts, c:opts.indexOf(w.tr)};
-    });
-  }
-  const quiz = quizSrc.map((q,i)=>`
-    <div class="listen-card">
-      <div class="listen-q">${i+1}. ${q.q||q.question||''}</div>
-      <div id="qo-${i}">${(q.opts||q.options||[]).map((o,j)=>`<div class="opt" onclick="checkQuiz(${i},${j},${q.c})">${o}</div>`).join('')}</div>
-      <div id="qf-${i}"></div>
-    </div>`).join('') + completeBtnHtml;
+  const practiceHtml = `
+    <div class="practice-intro-card">
+      <div class="practice-intro-icon">🎯</div>
+      <div class="practice-intro-title">${s('tab_practice')}</div>
+      <div class="practice-intro-body">${s('practice_intro')}</div>
+      <button type="button" class="practice-start-btn" onclick="startExercise(${meta.num},event)">${s('practice_start')}</button>
+    </div>${completeBtnHtml}`;
 
   // NUMBERS (sadece L2)
   let numbersHtml = '';
@@ -1857,17 +1900,27 @@ function buildLessonHTML(L, meta){
   }
 
   return `
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">
-      <button class="back-btn" onclick="closeLessonDetail()" style="margin-bottom:0">${s('lesson_back')}</button>
-      <span id="lesson-score-live" style="font-size:12px;font-weight:700;margin-left:auto;transition:color .3s;"></span>
+    <button type="button" class="lesson-back-btn" onclick="closeLessonDetail()">
+      <span class="lesson-back-icon">←</span>
+      <span>${s('lesson_back_list')}</span>
+    </button>
+    <div class="lesson-hero">
+      <div class="lesson-hero-emoji" aria-hidden="true">${meta.emoji}</div>
+      <div class="lesson-hero-text">
+        <div class="lesson-hero-label">${lessonNumLabel(meta.num)}</div>
+        <h2 class="lesson-hero-title">${Lf(meta,'title')}</h2>
+        ${lessonSubtitle(meta) ? `<div class="lesson-hero-sub">${lessonSubtitle(meta)}</div>` : ''}
+        <div class="lesson-hero-meta"><span id="lesson-score-live"></span></div>
+      </div>
+      <button type="button" class="lesson-header-star" onclick="showLessonStars(${meta.num},event)" title="${appLang==='en'?'Starred items':'Yıldızlılar'}">⭐</button>
     </div>
-    <h2>${meta.emoji} ${Lf(meta,'title')}</h2>
     <div class="ltabs" id="ltabs-wrap">${tabs}</div>
     ${tabNames.map(t=>`<div id="lc-${t}" class="lcontent">${
       t==='words'?(pronounTable+words):t==='tones'?tones:t==='grammar'?grammar:
       t==='speaking'?speaking:t==='dialogue'?dialogues:
-      t==='listening'?listening:t==='numbers'?numbersHtml:
-      t==='calc'?calcHtml:quiz
+      t==='listening'?listening:t==='practice'?practiceHtml:
+      t==='numbers'?numbersHtml:
+      t==='calc'?calcHtml:''
     }</div>`).join('')}
   `;
 }
@@ -2062,12 +2115,15 @@ function checkListen(idx, sel, correct){
 }
 function checkQuiz(idx, sel, correct){
   const lessonData = LESSONS[currentLesson.num];
+  const quizList = window._lessonQuiz || lessonData.quiz || [];
+  const q = quizList[idx] || {};
+  const opts = q.opts || q.options || [];
   document.getElementById('qo-'+idx).querySelectorAll('.opt').forEach((o,i)=>{
     o.onclick=null;
     if(i===correct) o.classList.add('correct');
     else if(i===sel) o.classList.add('wrong');
   });
-  document.getElementById('qf-'+idx).innerHTML=`<div class="fb ${sel===correct?'ok':'nope'}">${sel===correct?s('test_correct_fb'):s('test_wrong_prefix')+' '+lessonData.quiz[idx].opts[correct]}</div>`;
+  document.getElementById('qf-'+idx).innerHTML=`<div class="fb ${sel===correct?'ok':'nope'}">${sel===correct?s('test_correct_fb'):s('test_wrong_prefix')+' '+(opts[correct]||'')}</div>`;
   // Skor kaydet
   const st = getStats(currentLesson.num);
   st.quizTotal++;
@@ -3101,6 +3157,8 @@ function buildHelpContent(){
       <div class="help-info-row"><span>${en?'Developer':'Geliştirici'}</span><strong>Ali Dinçer, Phuket 🇹🇭</strong></div>
       <div class="help-section-header" style="margin-top:16px;">📦 ${en?'Version History':'Versiyon Geçmişi'}</div>
       <div class="help-changelog">
+        <div class="changelog-item"><div class="changelog-ver">v3.56</div>
+          <div class="changelog-desc">${en?'Lesson menu UX aligned with English app: card redesign, hero header, practice tab (quiz removed from tabs), dark mode contrast':'Ingilizce uygulama ile menu UX: kart tasarimi, hero baslik, Alistirma sekmesi, karanlik mod kontrast'}</div></div>
         <div class="changelog-item"><div class="changelog-ver">v3.55</div>
           <div class="changelog-desc">${en?'Production release: lessons 10-19 live, BONUS Thai enrichment, progress bar fix':'Canli surum: Ders 10-19 yayinda, BONUS Thai zenginlestirme, ilerleme cubugu duzeltmesi'}</div></div>
         <div class="changelog-item"><div class="changelog-ver">v3.54</div>
