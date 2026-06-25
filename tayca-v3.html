@@ -577,7 +577,7 @@ if('serviceWorker' in navigator){
   });
 }
 // Versiyon kontrolü — yeni versiyon varsa cache temizle
-const APP_VERSION = 'v3.53';
+const APP_VERSION = 'v3.55';
 const storedVersion = localStorage.getItem('app_version');
 if(storedVersion && storedVersion !== APP_VERSION){
   // Yeni versiyon → caches temizle
@@ -876,7 +876,7 @@ function setLang(lang){
     <span class="ltimer-icon">⏱️</span>
     <span id="lesson-live-timer">00:00</span>
   </div>
-  <span class="vbadge" id="app-version">v3.53</span>
+  <span class="vbadge" id="app-version">v3.55</span>
   <button class="hbtn" onclick="openModal('help-overlay')">❓</button>
   <button class="hbtn" onclick="openModal('settings-overlay')">⚙️</button>
 </header>
@@ -1127,15 +1127,18 @@ function saveVisited(){
 }
 
 function updateProgressBar(){
-  const total = LESSONS_META.length; // 19
-  let completed = 0;
   let partialScore = 0;
+  let completedScenario = 0;
+  let completedBonus = 0;
+  const scenarioTotal = LESSONS_META.filter(m=>m.num<20 && m.hasContent).length;
+  const bonusTotal = LESSONS_META.filter(m=>m.num>=20 && m.hasContent).length;
 
   LESSONS_META.forEach(meta => {
     if(!meta.hasContent){ return; }
     if(isCompleted(meta.num)){
-      completed++;
       partialScore += 1;
+      if(meta.num < 20) completedScenario++;
+      else completedBonus++;
     } else {
       const tabs = getTabsForLesson(meta);
       const visited = tabs.filter(t => visitedTabs['L'+meta.num+'_'+t]);
@@ -1149,7 +1152,7 @@ function updateProgressBar(){
   const fill = document.getElementById('pbar');
   const label = document.getElementById('pbar-label');
   if(fill) fill.style.width = Math.max(2, pct) + '%';
-  if(label) label.textContent = completed + ' / ' + total + ' ders';
+  if(label) label.textContent = completedScenario+'/'+scenarioTotal+' · ⭐'+completedBonus+'/'+bonusTotal;
 }
 
 // =================== SES ===================
@@ -1340,6 +1343,7 @@ function renderLessonCard(L){
   const scoreColor = scorePct===null?'#999': scorePct>=70?'#1565c0': scorePct>=40?'#e65100':'#c62828';
   const timeStr = st.totalSec>0 ? fmtTime(st.totalSec) : null;
   const isDone = isCompleted(L.num);
+  const hasSpeaking = L.num < 20;
   const badges = [];
   if(isDone) badges.push('<span class="lbadge lbadge-done">🎉 '+s('lesson_done_msg')+'</span>');
   else if(allVisited) badges.push('<span class="lbadge" style="background:#e3f2fd;color:#1565c0;">'+s('lesson_all_done_q')+'</span>');
@@ -1356,7 +1360,7 @@ function renderLessonCard(L){
         ${renderLessonStars(L.num)}
         <div class="lcard-actions" onclick="event.stopPropagation()">
           <button class="lca-btn ex" onclick="startExercise(${L.num},event)">🎯 ${appLang==='en'?'Practice':'Alıştırma'}</button>
-          <button class="lca-btn sp" onclick="openLessonAt(${L.num},'speaking',event)">🗣️ ${appLang==='en'?'Speaking':'Konuşma'}</button>
+          ${hasSpeaking ? `<button class="lca-btn sp" onclick="openLessonAt(${L.num},'speaking',event)">🗣️ ${appLang==='en'?'Speaking':'Konuşma'}</button>` : ''}
           <button class="lca-btn qz" onclick="openLessonAt(${L.num},'quiz',event)">📝 ${appLang==='en'?'Quiz':'Sınav'}</button>
           <button class="lca-btn st" onclick="showLessonStars(${L.num},event)">⭐ ${appLang==='en'?'Starred':'Yıldızlılar'}</button>
         </div>
@@ -1372,7 +1376,7 @@ function renderLessonList(){
   const bonusSets = bonus.length;
 
   // Toplam bonus kelime sayısı (her set ~50 kelime)
-  const totalWords = 1437;
+  const totalWords = 1408;
 
   const bonusHeader = `
     <div class="bonus-header" onclick="toggleBonus()">
@@ -3097,6 +3101,10 @@ function buildHelpContent(){
       <div class="help-info-row"><span>${en?'Developer':'Geliştirici'}</span><strong>Ali Dinçer, Phuket 🇹🇭</strong></div>
       <div class="help-section-header" style="margin-top:16px;">📦 ${en?'Version History':'Versiyon Geçmişi'}</div>
       <div class="help-changelog">
+        <div class="changelog-item"><div class="changelog-ver">v3.55</div>
+          <div class="changelog-desc">${en?'Production release: lessons 10-19 live, BONUS Thai enrichment, progress bar fix':'Canli surum: Ders 10-19 yayinda, BONUS Thai zenginlestirme, ilerleme cubugu duzeltmesi'}</div></div>
+        <div class="changelog-item"><div class="changelog-ver">v3.54</div>
+          <div class="changelog-desc">${en?'Lessons 10–19 content added (beach, hospital, emergency, etc.); BONUS vocab Thai enrichment; progress bar shows scenario/bonus separately':'Ders 10-19 icerik eklendi (plaj, hastane, acil vb.); BONUS kelimelere Thai karakter; ilerleme cubugu senaryo/bonus ayri gosterim'}</div></div>
         <div class="changelog-item"><div class="changelog-ver">v3.46+</div>
           <div class="changelog-desc">${en?'Full English/Turkish bilingual UI; dark mode; BONUS accordion; 1437-word CORE 2000 vocabulary with example sentences and grammar analysis; scroll-to-top button':'Tam İngilizce/Türkçe arayüz; dark mode; BONUS accordion; 1437 kelime CORE 2000 hazinesi, örnek cümleler ve gramer analizi; yukarı çık butonu'}</div></div>
         <div class="changelog-item"><div class="changelog-ver">v3.32</div>
