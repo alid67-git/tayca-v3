@@ -1222,7 +1222,7 @@ async function speak(text, slow, gender){
   if(!text||!text.trim()) return;
   GTTS.stop();
   const apiKey = GTTS.key();
-  if(!apiKey){ speakWebSpeech(text, slow, gender); return; }
+  if(!apiKey){ return speakWebSpeech(text, slow, gender); }
   const voiceName = gender==='f' ? 'th-TH-Chirp3-HD-Aoede' : 'th-TH-Chirp3-HD-Orus';
   const rate = slow ? 0.65 : 1.0;
   const cacheKey = text+'|'+voiceName+'|'+rate;
@@ -1235,31 +1235,39 @@ async function speak(text, slow, gender){
         body:JSON.stringify({input:{text},voice:{languageCode:'th-TH',name:voiceName},audioConfig:{audioEncoding:'MP3',speakingRate:rate}})
       });
       const data = await resp.json();
-      if(data.error||!data.audioContent){ console.warn('Google TTS hata:',data.error); speakWebSpeech(text,slow,gender); return; }
+      if(data.error||!data.audioContent){ console.warn('Google TTS hata:',data.error); return speakWebSpeech(text,slow,gender); }
       audioContent = data.audioContent;
       GTTS.cache.set(cacheKey, audioContent);
-    } catch(e){ console.warn('Google TTS baglanti hatasi:',e); speakWebSpeech(text,slow,gender); return; }
+    } catch(e){ console.warn('Google TTS baglanti hatasi:',e); return speakWebSpeech(text,slow,gender); }
   }
-  const audio = new Audio('data:audio/mp3;base64,'+audioContent);
-  GTTS._current = audio;
-  audio.play();
+  return new Promise(resolve => {
+    const audio = new Audio('data:audio/mp3;base64,'+audioContent);
+    GTTS._current = audio;
+    audio.onended = resolve;
+    audio.onerror = resolve;
+    audio.play();
+  });
 }
 
 function speakWebSpeech(text, slow, gender){
-  if(!window.speechSynthesis){ return; }
-  window.speechSynthesis.cancel();
-  const u = new SpeechSynthesisUtterance(text);
-  u.lang='th-TH';
-  if(gender==='m'){ u.pitch=slow?0.20:0.25; u.rate=slow?0.38:0.82; }
-  else if(gender==='f'){ u.pitch=slow?0.95:1.05; u.rate=slow?0.40:0.88; }
-  else { u.pitch=slow?0.50:0.55; u.rate=slow?0.38:0.85; }
-  const voices=window.speechSynthesis.getVoices();
-  const thaiVoices=voices.filter(x=>x.lang==='th-TH'||x.lang==='th');
-  if(thaiVoices.length>0){
-    if(gender==='f'){ let fv=thaiVoices.find(v=>{const n=v.name.toLowerCase();return n.includes('kanya')||n.includes('female')||n.includes('woman');}); u.voice=fv||thaiVoices[Math.max(0,thaiVoices.length-1)]; }
-    else { let mv=thaiVoices.find(v=>{const n=v.name.toLowerCase();return n.includes('male')||n.includes('man');}); u.voice=mv||thaiVoices[0]; }
-  }
-  window.speechSynthesis.speak(u);
+  return new Promise(resolve => {
+    if(!window.speechSynthesis){ resolve(); return; }
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang='th-TH';
+    if(gender==='m'){ u.pitch=slow?0.70:0.80; u.rate=slow?0.55:0.82; }
+    else if(gender==='f'){ u.pitch=slow?0.95:1.05; u.rate=slow?0.60:0.90; }
+    else { u.pitch=slow?0.85:0.95; u.rate=slow?0.55:0.85; }
+    const voices=window.speechSynthesis.getVoices();
+    const thaiVoices=voices.filter(x=>x.lang==='th-TH'||x.lang==='th');
+    if(thaiVoices.length>0){
+      if(gender==='f'){ let fv=thaiVoices.find(v=>{const n=v.name.toLowerCase();return n.includes('kanya')||n.includes('female')||n.includes('woman');}); u.voice=fv||thaiVoices[Math.max(0,thaiVoices.length-1)]; }
+      else { let mv=thaiVoices.find(v=>{const n=v.name.toLowerCase();return n.includes('male')||n.includes('man');}); u.voice=mv||thaiVoices[0]; }
+    }
+    u.onend = resolve;
+    u.onerror = resolve;
+    window.speechSynthesis.speak(u);
+  });
 }
 
 function showWordIdx(idx){
@@ -1318,31 +1326,25 @@ document.addEventListener('click', function(e){
 });
 
 // =================== DİYALOG OYNAT ===================
-function playDialogue(di){
+async function playDialogue(di){
   const lessonData = LESSONS[currentLesson.num];
   const lines = lessonData.dialogues[di].lines;
   const btn = document.getElementById('dplay-'+di);
+  GTTS.stop();
   window.speechSynthesis.cancel();
   clearDialogHighlight(di);
-  let i=0;
-  if(btn){ btn.textContent='⏹ Durdur'; btn.onclick=()=>{ window.speechSynthesis.cancel(); clearDialogHighlight(di); if(btn){btn.textContent='▶ Tümü';btn.onclick=()=>playDialogue(di);} }; }
-  function next(){
-    if(i>=lines.length){ clearDialogHighlight(di); if(btn){btn.textContent='▶ Tümü';btn.onclick=()=>playDialogue(di);} return; }
+  let stopped = false;
+  if(btn){ btn.textContent='⏹ Durdur'; btn.onclick=()=>{ stopped=true; GTTS.stop(); window.speechSynthesis.cancel(); clearDialogHighlight(di); if(btn){btn.textContent='▶ Tümü';btn.onclick=()=>playDialogue(di);} }; }
+  for(let i=0; i<lines.length; i++){
+    if(stopped) break;
     clearDialogHighlight(di);
     const lineEl = document.getElementById('dline-'+di+'-'+i);
     if(lineEl) lineEl.classList.add('active-line');
     const gender = lines[i].s.toLowerCase()==='ali' ? 'm' : 'f';
-    const u = new SpeechSynthesisUtterance(lines[i].th);
-    u.lang = 'th-TH';
-    u.pitch = gender==='m' ? 0.25 : 1.05;
-    u.rate = 0.82;
-    const voices = window.speechSynthesis.getVoices();
-    const thaiVoices = voices.filter(x => x.lang==='th-TH' || x.lang==='th');
-    if(thaiVoices.length>0) u.voice = thaiVoices[0];
-    u.onend = ()=>{ i++; setTimeout(next, 650); };
-    window.speechSynthesis.speak(u);
+    await speak(lines[i].th, false, gender);
+    if(!stopped) await new Promise(r=>setTimeout(r, 650));
   }
-  next();
+  if(!stopped){ clearDialogHighlight(di); if(btn){btn.textContent='▶ Tümü';btn.onclick=()=>playDialogue(di);} }
 }
 function clearDialogHighlight(di){
   document.querySelectorAll('[id^="dline-'+di+'-"]').forEach(el=>el.classList.remove('active-line'));
@@ -1825,7 +1827,7 @@ function buildLessonHTML(L, meta){
         <div style="font-weight:700;color:#0d9488;margin:14px 0 8px;font-size:13px;border-left:3px solid #0d9488;padding-left:8px">${g.title}</div>
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:8px;margin-bottom:4px">
           ${g.data.map(d=>`
-            <div onclick="if(window.speechSynthesis){const u=new SpeechSynthesisUtterance('${d.word}');u.lang='th-TH';u.rate=0.82;speechSynthesis.cancel();speechSynthesis.speak(u);this.style.borderColor='#0d9488';setTimeout(()=>this.style.borderColor='#e0e0e0',1200)}"
+            <div onclick="speak('${d.word}',false,'');this.style.borderColor='#0d9488';setTimeout(()=>this.style.borderColor='#e0e0e0',1200)"
               style="background:white;border:1.5px solid #e0e0e0;border-radius:10px;padding:10px 6px;text-align:center;cursor:pointer;transition:border-color .2s">
               <div style="font-size:22px;font-weight:700;color:#0d9488;font-family:'Noto Sans Thai',sans-serif;line-height:1.1">${d.thai}</div>
               <div style="font-size:11px;color:#888;margin-top:2px">${d.n}</div>
@@ -1840,7 +1842,7 @@ function buildLessonHTML(L, meta){
           ${s('num_compound_info')}
         </div>
         ${L.compounds.map(c=>`
-          <div onclick="if(window.speechSynthesis){const u=new SpeechSynthesisUtterance('${c.thai}');u.lang='th-TH';u.rate=0.82;speechSynthesis.cancel();speechSynthesis.speak(u)}"
+          <div onclick="speak('${c.thai}',false,'')"
             style="background:white;border:1.5px solid #e0e0e0;border-radius:10px;padding:10px 12px;margin-bottom:8px;cursor:pointer;transition:border-color .2s"
             onmouseenter="this.style.borderColor='#0d9488'" onmouseleave="this.style.borderColor='#e0e0e0'">
             <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:6px">
@@ -2068,7 +2070,7 @@ function l2CalcNumber(val){
   ).join('');
 }
 function l2SpeakCalc(){
-  if(l2CalcWord && window.speechSynthesis){ const u=new SpeechSynthesisUtterance(l2CalcWord); u.lang='th-TH'; u.rate=0.82; speechSynthesis.cancel(); speechSynthesis.speak(u); }
+  if(l2CalcWord){ speak(l2CalcWord, false, ''); }
 }
 function l2BuildThai(n){
   if(n===0) return {thai:'ศูนย์',roman:'sǔun',tr:'sıfır',chunks:[{val:'0',th:'ศูนย์',rm:'sǔun'}]};
